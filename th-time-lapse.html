@@ -2,14 +2,14 @@
 <link rel="import" href="../th-animated/th-animated.html">
 <link rel="import" href="../th-text/th-text.html">
 
-<polymer-element name="th-time-lapse" extends="th-animated" attributes="timePeriod rate units altText frequency textType numberSize width height">
+<polymer-element name="th-time-lapse" extends="th-animated" attributes="timePeriod rate units altText frequency textType numberSize width height displayWholeNum">
 
   <template>
       <core-style ref="theme"></core-style>
 
       <!-- Inline styles are for Safari and mobile support --> 
       <th-text markdown="false" type="{{textType}}" width="{{width}}" height="{{height}}">
-        <span style="font-size: {{numberSize}}px;">{{currentCount}}</span> {{units}} {{textDetail}}
+        <span style="font-size: {{numberSize}}px;">{{currentCount | numberFilter}}</span> {{units}} {{textDetail}}
       </th-text>
   </template>
   
@@ -48,6 +48,11 @@
          * @type {Number}
          */
         numberSize: 40,
+        /**
+         * 'displayWholeNum' is an option to only display whole numbers in the count
+         * @type {Boolean}
+         */
+        displayWholeNum: false,
         init: function(){
           var self = this;
           var d = new Date();
@@ -63,7 +68,7 @@
 
           var getTextDetail = {
             minute: "in the last minute.",
-            hour: "in the past hour.",
+            hour: "so far this hour.",
             day: "so far today.",
             month: "so far this month.",
             year: "so far this year."
@@ -72,7 +77,7 @@
 
           self.textDetail = self.altText ? self.altText : getTextDetail[self.timePeriod];
           self.startTime = getStartTime[self.timePeriod];
-          self.decimalPlaces = self.getDecimalPlaces(self.rate);
+          self.decimalPlaces = self.displayWholeNum ? 0 : self.getDecimalPlaces(self.rate);
         },
         /**
         * '_decimalPlaces' takes a number and determines how many digits come after the decimal point
@@ -81,7 +86,7 @@
         */
         getDecimalPlaces: function(num){
           var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-            console.log(num);
+            
             if (!match) { return 0; }
             return Math.max(
                  0,
@@ -169,13 +174,16 @@
               return milleseconds / 1000 / 60 / 60 / 24 / 365; // 1000 ms / 60 sec / 60 min / 24 hr / 365 days
           }
         },
+        numberFilter: function(value){
+          var self = this, number;
+          return number = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+        },
         reset: function(){
           self.init();
         }
       });
 
   // TODO:
-  //  - Add commas in large numbers
   //  - Visualize the statistic?
   //  - Firm up month and year calcs
   //  - Refactor
