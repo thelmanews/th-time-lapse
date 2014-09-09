@@ -9,7 +9,7 @@
 
       <!-- Inline styles are for Safari and mobile support --> 
       <th-text markdown="false" type="{{textType}}" width="{{width}}" height="{{height}}">
-        <span style="font-size: {{numberSize}}px;">{{currentCount | wholeNumFilter}}</span> {{units}} {{textDetail}}
+        <span style="font-size: {{numberSize}}px;">{{currentCount | numberFilter}}</span> {{units}} {{textDetail}}
       </th-text>
   </template>
   
@@ -19,7 +19,7 @@
          * 'rate' describes the number that occurs every frequency period
          * @type {Number}   i.e. 5,000 (rate) births per second (frequency)
          */
-        rate: 10.2,
+        rate: 12130.2,
         /**
          * 'frequency' refers to the period by which to the rate is measured
          * @type {String}   i.e. 5,000 (rate) births per second (frequency)
@@ -77,7 +77,7 @@
 
           self.textDetail = self.altText ? self.altText : getTextDetail[self.timePeriod];
           self.startTime = getStartTime[self.timePeriod];
-          self.decimalPlaces = self.getDecimalPlaces(self.rate);
+          self.decimalPlaces = self.displayWholeNum ? 0 : self.getDecimalPlaces(self.rate);
         },
         /**
         * '_decimalPlaces' takes a number and determines how many digits come after the decimal point
@@ -86,7 +86,7 @@
         */
         getDecimalPlaces: function(num){
           var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-            console.log(num);
+            
             if (!match) { return 0; }
             return Math.max(
                  0,
@@ -174,12 +174,12 @@
               return milleseconds / 1000 / 60 / 60 / 24 / 365; // 1000 ms / 60 sec / 60 min / 24 hr / 365 days
           }
         },
-        wholeNumFilter: function(value){
-          var self = this;
-          if (self.displayWholeNum){
-            value = Math.round(value);
-          }
-          return value;
+        numberFilter: function(value){
+          var self = this, number;
+          
+          number = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+
+          return number;
         },
         reset: function(){
           self.init();
@@ -187,7 +187,6 @@
       });
 
   // TODO:
-  //  - Add commas in large numbers
   //  - Visualize the statistic?
   //  - Firm up month and year calcs
   //  - Refactor
