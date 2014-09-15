@@ -8,9 +8,9 @@
       <core-style ref="theme"></core-style>
 
       <!-- Inline styles are for Safari and mobile support --> 
-      <th-text markdown="false" type="{{textType}}" width="{{width}}" height="{{height}}">
-        <span style="font-size: {{numberSize}}px;">{{currentCount | numberFilter}}</span> {{units}} {{textDetail}}
-      </th-text>
+      <div class="{{textType}}">
+        <span style="font-size: {{numberSize}}px;">{{currentCount | numberFilter}}</span> <span>{{units}} {{textDetail}}</span>
+      </div>
   </template>
   
   <script>
@@ -76,6 +76,7 @@
 
 
           self.textDetail = self.altText ? self.altText : getTextDetail[self.timePeriod];
+
           self.startTime = getStartTime[self.timePeriod];
           self.decimalPlaces = self.displayWholeNum ? 0 : self.getDecimalPlaces(self.rate);
         },
@@ -176,6 +177,7 @@
         },
         numberFilter: function(value){
           var self = this, number;
+
           return number = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
         },
         reset: function(){
