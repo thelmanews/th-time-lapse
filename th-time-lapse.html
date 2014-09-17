@@ -179,12 +179,12 @@
           return number = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
         },
         reset: function(){
+          var self = this;
           self.init();
         }
       });
 
   // TODO:
-  //  - Visualize the statistic?
   //  - Firm up month and year calcs
   //  - Refactor
 
