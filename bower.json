@@ -4,10 +4,8 @@
   "keywords": "seed, polymer, web-components",
   "main": "th-time-lapse.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#0.3.4",
-    "platform": "Polymer/platform#0.3.4",
+    "core-ajax": "polymer/core-ajax#~0.5.1"
     "th-animated": "https://github.com/thelmanews/th-animated.git",
-    "th-theme": "https://github.com/thelmanews/th-theme.git",
-    "web-animations-js": "https://github.com/web-animations/web-animations-js.git"
+    "th-text": "https://github.com/thelmanews/th-text.git"
   }
 }
