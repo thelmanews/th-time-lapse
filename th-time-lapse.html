@@ -22,7 +22,7 @@
         /**
          * 'frequency' refers to the period by which to the rate is measured
          * @type {String}   i.e. 5,000 (rate) births per second (frequency)
-         * @options: second, minute, hour, day, week, month, year
+         * @options: second, minute, hour, day, week, month, quarter year
          */
         frequency: "second", 
         /**
@@ -33,7 +33,7 @@
         /**
          * 'timePeriod' is a relative reference to a time for which to begin counting
          * @type {String}   i.e. 5.3 million (rate) births have occured in the past day (timePeriod)
-         * @options: minute, hour, day, week, month, year
+         * @options: minute, hour, day, week, month, quarter year
          */
         timePeriod: "minute",
         /**
@@ -56,20 +56,27 @@
           var self = this;
           var d = new Date();
 
+          var quarterMonths = [0, 3, 6, 9];
           var getStartTime = { 
             minute: d.setSeconds(0,0),
             hour: d.setMinutes(0,0,0),
             day: d.setHours(0,0,0),
             // week: (new Date()).setHours(0,0,0,0),
             month: d.setMonth(d.getMonth(), 1),
+            quarter: (function(){
+              var q = Math.ceil(d.getMonth()/3);
+              var m = quarterMonths[(q-1)];
+              return d.setMonth(m, 1);
+            })(),
             year: d.setMonth(0,1)
-          }
+          };
 
           var getTextDetail = {
             minute: "in the last minute.",
             hour: "so far this hour.",
             day: "so far today.",
             month: "so far this month.",
+            quarter: "so far this quarter.",
             year: "so far this year."
           };
 
@@ -168,6 +175,8 @@
             case "month":
               // TODO: Need to make this more accurate to account for different number of days in different months
               return milleseconds / 1000 / 60 / 60 / 24 / 30; // 1000 ms / 60 sec / 60 min / 24 hr / 30 days
+            case "quarter":
+              return milleseconds / 1000 / 60 / 60 / 24 / 91; // 1000 ms / 60 sec / 60 min / 24 hr / 91 days in a quarter
             case "year":
               // TODO: account for leap year (364 days)
               return milleseconds / 1000 / 60 / 60 / 24 / 365; // 1000 ms / 60 sec / 60 min / 24 hr / 365 days
